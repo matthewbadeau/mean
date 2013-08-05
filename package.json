@@ -30,6 +30,7 @@
     , "forever": "latest"
     , "mean-logger": "latest"
     , "bower": "latest"
+    , "scrypt": "latest"
   }
   , "devDependencies": {
         "supertest": "latest"

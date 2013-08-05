@@ -5,7 +5,8 @@
 
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , crypto = require('crypto')
+  , scrypt = require('scrypt')
+  , MAXTIME = 0.1
   , _ = require('underscore')
   , authTypes = ['github', 'twitter', 'facebook', 'google']
 
@@ -19,7 +20,6 @@ var UserSchema = new Schema({
   username: String,
   provider: String,
   hashed_password: String,
-  salt: String,
   facebook: {},
   twitter: {},
   github: {},
@@ -34,7 +34,6 @@ UserSchema
   .virtual('password')
   .set(function(password) {
     this._password = password
-    this.salt = this.makeSalt()
     this.hashed_password = this.encryptPassword(password)
   })
   .get(function() { return this._password })
@@ -103,18 +102,7 @@ UserSchema.methods = {
    */
 
   authenticate: function(plainText) {
-    return this.encryptPassword(plainText) === this.hashed_password
-  },
-
-  /**
-   * Make salt
-   *
-   * @return {String}
-   * @api public
-   */
-
-  makeSalt: function() {
-    return Math.round((new Date().valueOf() * Math.random())) + ''
+    return scrypt.verifyHashSync(this.hashed_password, plainText);
   },
 
   /**
@@ -127,7 +115,7 @@ UserSchema.methods = {
 
   encryptPassword: function(password) {
     if (!password) return ''
-    return crypto.createHmac('sha1', this.salt).update(password).digest('hex')
+    return scrypt.passwordHashSync(password, MAXTIME);
   }
 }
 
