@@ -1,11 +1,7 @@
 h1 {
-	text-align: center;
+    text-align:center
 }
 
-ul {
-  list-style: none;
-}
-
-li:not(:last-child) {
-  border-bottom: 1px solid #ccc;
+ul.articles li:not(:last-child) {
+    border-bottom:1px solid #ccc
 }
