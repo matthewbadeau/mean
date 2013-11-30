@@ -1,38 +1,17 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    crypto = require('crypto'),
-    _ = require('underscore'),
-    authTypes = ['github', 'twitter', 'facebook', 'google'];
-
-<<<<<<< HEAD
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , scrypt = require('scrypt')
   , MAXTIME = 0.1
   , _ = require('underscore')
   , authTypes = ['github', 'twitter', 'facebook', 'google']
-=======
->>>>>>> upstream/master
 
 /**
  * User Schema
  */
 var UserSchema = new Schema({
-<<<<<<< HEAD
-  name: String,
-  email: String,
-  username: String,
-  provider: String,
-  hashed_password: String,
-  facebook: {},
-  twitter: {},
-  github: {},
-  google: {}
-})
-=======
     name: String,
     email: String,
     username: {
@@ -47,12 +26,10 @@ var UserSchema = new Schema({
     github: {},
     google: {}
 });
->>>>>>> upstream/master
 
 /**
  * Virtuals
  */
-<<<<<<< HEAD
 
 UserSchema
   .virtual('password')
@@ -60,16 +37,7 @@ UserSchema
     this._password = password
     this.hashed_password = this.encryptPassword(password)
   })
-  .get(function() { return this._password })
-=======
-UserSchema.virtual('password').set(function(password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.hashed_password = this.encryptPassword(password);
-}).get(function() {
-    return this._password;
-});
->>>>>>> upstream/master
+  .get(function() { return this._password });
 
 /**
  * Validations
@@ -120,7 +88,6 @@ UserSchema.pre('save', function(next) {
  * Methods
  */
 UserSchema.methods = {
-<<<<<<< HEAD
 
   /**
    * Authenticate - check if the passwords are the same
@@ -148,41 +115,4 @@ UserSchema.methods = {
   }
 }
 
-mongoose.model('User', UserSchema)
-=======
-    /**
-     * Authenticate - check if the passwords are the same
-     *
-     * @param {String} plainText
-     * @return {Boolean}
-     * @api public
-     */
-    authenticate: function(plainText) {
-        return this.encryptPassword(plainText) === this.hashed_password;
-    },
-
-    /**
-     * Make salt
-     *
-     * @return {String}
-     * @api public
-     */
-    makeSalt: function() {
-        return Math.round((new Date().valueOf() * Math.random())) + '';
-    },
-
-    /**
-     * Encrypt password
-     *
-     * @param {String} password
-     * @return {String}
-     * @api public
-     */
-    encryptPassword: function(password) {
-        if (!password) return '';
-        return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
-    }
-};
-
 mongoose.model('User', UserSchema);
->>>>>>> upstream/master
