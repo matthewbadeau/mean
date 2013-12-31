@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Module dependencies.
  */
@@ -18,8 +20,8 @@ var UserSchema = new Schema({
         type: String,
         unique: true
     },
-    provider: String,
     hashed_password: String,
+    provider: String,
     salt: String,
     facebook: {},
     twitter: {},
@@ -89,6 +91,7 @@ UserSchema.pre('save', function(next) {
  */
 UserSchema.methods = {
 
+<<<<<<< HEAD
   /**
    * Authenticate - check if the passwords are the same
    *
@@ -114,5 +117,30 @@ UserSchema.methods = {
     return scrypt.passwordHashSync(password, MAXTIME);
   }
 }
+=======
+    /**
+     * Make salt
+     *
+     * @return {String}
+     * @api public
+     */
+    makeSalt: function() {
+        return crypto.randomBytes(16).toString('base64');
+    },
+
+    /**
+     * Encrypt password
+     *
+     * @param {String} password
+     * @return {String}
+     * @api public
+     */
+    encryptPassword: function(password) {
+        if (!password || !this.salt) return '';
+        var salt = new Buffer(this.salt, 'base64');
+        return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    }
+};
+>>>>>>> upstream/master
 
 mongoose.model('User', UserSchema);
